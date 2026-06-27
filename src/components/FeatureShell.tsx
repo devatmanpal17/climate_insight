@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -27,7 +27,3 @@ export function FeatureShell({
     </div>
   );
 }
-
-export const Route = createFileRoute("/dashboard/_shell")({
-  component: () => null,
-});
