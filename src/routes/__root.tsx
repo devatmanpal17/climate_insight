@@ -77,20 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Bharat Climate Twin — AI-powered Digital Twin of India's Climate" },
+      { name: "description", content: "An AI-powered digital twin of India's climate — predicting rainfall, detecting risks, and guiding decisions in real time. Built on IMD, INSAT, MOSDAC and Bhuvan datasets." },
+      { property: "og:title", content: "Bharat Climate Twin" },
+      { property: "og:description", content: "AI-powered digital twin of India's climate." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" },
+      { rel: "stylesheet", href: appCss },
     ],
   }),
   shellComponent: RootShell,
@@ -113,13 +111,20 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+import { ThemeToggle } from "../components/ThemeToggle";
+import { FluidCursor } from "../components/FluidCursor";
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      <FluidCursor />
+      <div className="fixed right-4 top-4 z-50">
+        <ThemeToggle />
+      </div>
       <Outlet />
     </QueryClientProvider>
   );
 }
+
