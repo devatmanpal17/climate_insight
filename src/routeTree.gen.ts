@@ -10,11 +10,28 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardScenarioRouteImport } from './routes/dashboard.scenario'
+import { Route as DashboardRiskAlertsRouteImport } from './routes/dashboard.risk-alerts'
+import { Route as DashboardReportsRouteImport } from './routes/dashboard.reports'
+import { Route as DashboardLiveMapRouteImport } from './routes/dashboard.live-map'
+import { Route as DashboardForecastRouteImport } from './routes/dashboard.forecast'
 
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,31 +39,107 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardScenarioRoute = DashboardScenarioRouteImport.update({
+  id: '/scenario',
+  path: '/scenario',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardRiskAlertsRoute = DashboardRiskAlertsRouteImport.update({
+  id: '/risk-alerts',
+  path: '/risk-alerts',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardReportsRoute = DashboardReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardLiveMapRoute = DashboardLiveMapRouteImport.update({
+  id: '/live-map',
+  path: '/live-map',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardForecastRoute = DashboardForecastRouteImport.update({
+  id: '/forecast',
+  path: '/forecast',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/dashboard/forecast': typeof DashboardForecastRoute
+  '/dashboard/live-map': typeof DashboardLiveMapRoute
+  '/dashboard/reports': typeof DashboardReportsRoute
+  '/dashboard/risk-alerts': typeof DashboardRiskAlertsRoute
+  '/dashboard/scenario': typeof DashboardScenarioRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/dashboard/forecast': typeof DashboardForecastRoute
+  '/dashboard/live-map': typeof DashboardLiveMapRoute
+  '/dashboard/reports': typeof DashboardReportsRoute
+  '/dashboard/risk-alerts': typeof DashboardRiskAlertsRoute
+  '/dashboard/scenario': typeof DashboardScenarioRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/dashboard/forecast': typeof DashboardForecastRoute
+  '/dashboard/live-map': typeof DashboardLiveMapRoute
+  '/dashboard/reports': typeof DashboardReportsRoute
+  '/dashboard/risk-alerts': typeof DashboardRiskAlertsRoute
+  '/dashboard/scenario': typeof DashboardScenarioRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/dashboard'
+    | '/dashboard/forecast'
+    | '/dashboard/live-map'
+    | '/dashboard/reports'
+    | '/dashboard/risk-alerts'
+    | '/dashboard/scenario'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard'
-  id: '__root__' | '/' | '/dashboard'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/dashboard'
+    | '/dashboard/forecast'
+    | '/dashboard/live-map'
+    | '/dashboard/reports'
+    | '/dashboard/risk-alerts'
+    | '/dashboard/scenario'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/dashboard'
+    | '/dashboard/forecast'
+    | '/dashboard/live-map'
+    | '/dashboard/reports'
+    | '/dashboard/risk-alerts'
+    | '/dashboard/scenario'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +151,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,12 +172,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/scenario': {
+      id: '/dashboard/scenario'
+      path: '/scenario'
+      fullPath: '/dashboard/scenario'
+      preLoaderRoute: typeof DashboardScenarioRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/risk-alerts': {
+      id: '/dashboard/risk-alerts'
+      path: '/risk-alerts'
+      fullPath: '/dashboard/risk-alerts'
+      preLoaderRoute: typeof DashboardRiskAlertsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/reports': {
+      id: '/dashboard/reports'
+      path: '/reports'
+      fullPath: '/dashboard/reports'
+      preLoaderRoute: typeof DashboardReportsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/live-map': {
+      id: '/dashboard/live-map'
+      path: '/live-map'
+      fullPath: '/dashboard/live-map'
+      preLoaderRoute: typeof DashboardLiveMapRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/forecast': {
+      id: '/dashboard/forecast'
+      path: '/forecast'
+      fullPath: '/dashboard/forecast'
+      preLoaderRoute: typeof DashboardForecastRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardForecastRoute: typeof DashboardForecastRoute
+  DashboardLiveMapRoute: typeof DashboardLiveMapRoute
+  DashboardReportsRoute: typeof DashboardReportsRoute
+  DashboardRiskAlertsRoute: typeof DashboardRiskAlertsRoute
+  DashboardScenarioRoute: typeof DashboardScenarioRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardForecastRoute: DashboardForecastRoute,
+  DashboardLiveMapRoute: DashboardLiveMapRoute,
+  DashboardReportsRoute: DashboardReportsRoute,
+  DashboardRiskAlertsRoute: DashboardRiskAlertsRoute,
+  DashboardScenarioRoute: DashboardScenarioRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRoute,
+  AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
+  DashboardRoute: DashboardRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
