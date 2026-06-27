@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { CloudRain } from "lucide-react";
+import { Satellite } from "lucide-react";
 
 const links = [
   { to: "/", label: "Home" },
@@ -10,13 +10,14 @@ const links = [
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 glass border-b border-white/10">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-2.5">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground shadow-card">
-            <CloudRain className="h-4.5 w-4.5" strokeWidth={2.2} />
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <span className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-teal to-monsoon text-white shadow-glow">
+            <Satellite className="h-4 w-4" strokeWidth={2.2} />
+            <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-amber-accent animate-pulse-dot" />
           </span>
-          <span className="font-display text-base font-bold tracking-tight text-foreground">
+          <span className="font-display text-base font-bold tracking-tight">
             Bharat Climate Twin
           </span>
         </Link>
@@ -25,8 +26,8 @@ export function Navbar() {
             <Link
               key={l.to}
               to={l.to}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              activeProps={{ className: "rounded-md px-3 py-2 text-sm font-semibold text-foreground bg-accent" }}
+              className="rounded-full px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              activeProps={{ className: "rounded-full px-3.5 py-1.5 text-sm font-semibold text-foreground glass" }}
               activeOptions={{ exact: l.to === "/" }}
             >
               {l.label}

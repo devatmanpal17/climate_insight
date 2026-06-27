@@ -1,32 +1,43 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Lightweight "fluid" cursor — a soft glowing dot that trails the pointer.
- * Pointer-events disabled, fixed overlay. Hidden on touch devices.
+ * Fluid cursor — a glowing core dot plus a chain of trailing blobs that
+ * lag behind with easing, giving a liquid-mercury feel. Hidden on touch.
  */
+const TRAIL = 6;
+
 export function FluidCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const pos = useRef({ x: 0, y: 0 });
-  const ring = useRef({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dots = useRef<{ x: number; y: number }[]>(
+    Array.from({ length: TRAIL }, () => ({ x: -100, y: -100 })),
+  );
+  const target = useRef({ x: -100, y: -100 });
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
     const onMove = (e: PointerEvent) => {
-      pos.current.x = e.clientX;
-      pos.current.y = e.clientY;
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${e.clientX - 4}px, ${e.clientY - 4}px, 0)`;
-      }
+      target.current.x = e.clientX;
+      target.current.y = e.clientY;
     };
 
     let raf = 0;
     const tick = () => {
-      ring.current.x += (pos.current.x - ring.current.x) * 0.18;
-      ring.current.y += (pos.current.y - ring.current.y) * 0.18;
-      if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${ring.current.x - 22}px, ${ring.current.y - 22}px, 0)`;
+      const nodes = containerRef.current?.children;
+      if (nodes) {
+        let prev = target.current;
+        for (let i = 0; i < TRAIL; i++) {
+          const d = dots.current[i];
+          // Each subsequent dot eases more slowly toward the one ahead of it
+          const ease = 0.35 - i * 0.04;
+          d.x += (prev.x - d.x) * ease;
+          d.y += (prev.y - d.y) * ease;
+          const n = nodes[i] as HTMLElement;
+          const size = 28 - i * 3;
+          n.style.transform = `translate3d(${d.x - size / 2}px, ${d.y - size / 2}px, 0)`;
+          prev = d;
+        }
       }
       raf = requestAnimationFrame(tick);
     };
@@ -39,16 +50,35 @@ export function FluidCursor() {
   }, []);
 
   return (
-    <>
-      <div
-        ref={ringRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9998] hidden h-11 w-11 rounded-full border border-teal/40 backdrop-blur-[1px] md:block"
-        style={{ transition: "border-color 200ms", mixBlendMode: "multiply" }}
-      />
-      <div
-        ref={dotRef}
-        className="pointer-events-none fixed left-0 top-0 z-[9999] hidden h-2 w-2 rounded-full bg-teal shadow-[0_0_20px_4px_oklch(0.55_0.09_200_/_0.5)] md:block"
-      />
-    </>
+    <div
+      ref={containerRef}
+      className="pointer-events-none fixed inset-0 z-[9999] hidden md:block"
+      aria-hidden="true"
+    >
+      {Array.from({ length: TRAIL }).map((_, i) => {
+        const size = 28 - i * 3;
+        const opacity = 1 - i * 0.13;
+        return (
+          <div
+            key={i}
+            style={{
+              position: "fixed",
+              left: 0,
+              top: 0,
+              width: `${size}px`,
+              height: `${size}px`,
+              borderRadius: "9999px",
+              background: i === 0
+                ? "radial-gradient(circle, oklch(0.78 0.18 195) 0%, oklch(0.55 0.18 200 / 0.6) 60%, transparent 80%)"
+                : "radial-gradient(circle, oklch(0.65 0.18 195 / 0.7), transparent 70%)",
+              opacity,
+              filter: i === 0 ? "blur(0.5px)" : `blur(${i * 1.2}px)`,
+              mixBlendMode: "screen",
+              willChange: "transform",
+            }}
+          />
+        );
+      })}
+    </div>
   );
 }
