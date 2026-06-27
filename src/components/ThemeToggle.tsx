@@ -22,9 +22,10 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label="Toggle theme"
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-card transition-colors hover:bg-accent"
+      className="group relative inline-flex h-10 w-10 items-center justify-center rounded-full glass-btn text-foreground hover:scale-105 active:scale-95"
     >
-      {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      <Sun className={`h-4 w-4 absolute transition-all ${dark ? "scale-100 rotate-0 opacity-100" : "scale-0 -rotate-90 opacity-0"}`} />
+      <Moon className={`h-4 w-4 absolute transition-all ${dark ? "scale-0 rotate-90 opacity-0" : "scale-100 rotate-0 opacity-100"}`} />
     </button>
   );
 }

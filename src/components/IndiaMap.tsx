@@ -1,20 +1,64 @@
 /**
- * Subtle decorative outline of India — simplified path, used as background motif.
+ * Stylised outline of India with optional pulsing data points.
  */
-export function IndiaMap({ className = "" }: { className?: string }) {
+type Point = { x: number; y: number; label: string; level: "info" | "warn" | "danger" };
+
+const DEFAULT_POINTS: Point[] = [
+  { x: 240, y: 200, label: "Delhi", level: "warn" },
+  { x: 215, y: 290, label: "Mumbai", level: "info" },
+  { x: 295, y: 360, label: "Chennai", level: "info" },
+  { x: 345, y: 200, label: "Guwahati", level: "danger" },
+  { x: 295, y: 295, label: "Hyderabad", level: "info" },
+  { x: 195, y: 175, label: "Jaipur", level: "warn" },
+  { x: 335, y: 305, label: "Bhubaneswar", level: "danger" },
+  { x: 248, y: 365, label: "Bengaluru", level: "info" },
+];
+
+const COLORS: Record<Point["level"], string> = {
+  info: "var(--teal)",
+  warn: "var(--amber-accent)",
+  danger: "oklch(0.65 0.22 25)",
+};
+
+export function IndiaMap({
+  className = "",
+  points = DEFAULT_POINTS,
+  withPoints = false,
+}: {
+  className?: string;
+  points?: Point[];
+  withPoints?: boolean;
+}) {
   return (
     <svg
-      viewBox="0 0 612 612"
+      viewBox="0 0 500 480"
       className={className}
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.2"
+      strokeWidth="1.4"
       strokeLinejoin="round"
       strokeLinecap="round"
       aria-hidden="true"
     >
-      <path d="M243 60c12-4 30-8 48-6s30 12 44 18 26 4 38 10 18 16 32 22 30 8 36 22-4 30-8 44-6 28 0 40 18 22 18 38-12 28-22 38-22 18-24 32 6 28 2 42-18 22-32 26-30 0-44 6-26 18-40 22-30-2-44-6-28-12-40-22-22-22-28-36-8-28-16-40-22-20-24-34 6-28 4-42-12-26-12-40 8-26 18-36 20-20 28-32 18-22 32-28 30-6 42-10 24-10 36-14 22-10 34-12 18-2 30-6z" />
-      <path d="M392 188c8 2 16 8 18 18M205 220c-6 8-10 18-8 28M310 480c4 8 12 14 22 16" opacity="0.4" />
+      {/* Simplified India outline */}
+      <path d="M178 60 L210 50 L250 55 L285 70 L310 90 L335 100 L355 120 L375 145 L380 175 L370 195 L385 215 L395 245 L380 270 L355 285 L340 305 L325 330 L310 360 L290 390 L275 415 L260 435 L240 420 L225 395 L215 365 L205 335 L195 305 L180 280 L165 255 L150 230 L140 200 L145 170 L155 140 L165 105 Z"
+        opacity="0.85" />
+      {/* Inner detail */}
+      <path d="M210 120 Q260 130 320 145" opacity="0.3" />
+      <path d="M200 200 Q270 215 340 220" opacity="0.3" />
+      <path d="M195 280 Q260 295 330 290" opacity="0.3" />
+      {/* Sri Lanka */}
+      <path d="M285 430 L295 440 L295 455 L285 460 L275 450 Z" opacity="0.7" />
+
+      {withPoints && points.map((p) => (
+        <g key={p.label}>
+          <circle cx={p.x} cy={p.y} r="10" fill={COLORS[p.level]} opacity="0.18">
+            <animate attributeName="r" values="6;14;6" dur="2.4s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.4;0.05;0.4" dur="2.4s" repeatCount="indefinite" />
+          </circle>
+          <circle cx={p.x} cy={p.y} r="3.5" fill={COLORS[p.level]} />
+        </g>
+      ))}
     </svg>
   );
 }
